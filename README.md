@@ -28,7 +28,7 @@ Empowering agriculture with smart irrigation, real-time analytics, and human-cen
 ## 🏗️ System Architecture
 
 ---
-                    Data Collection
+                 
 IoT sensors (ESP32 with soil moisture and DHT11) capture live field data and transmit it to Firebase in real time.
 
 Data Storage & Sync
