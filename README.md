@@ -27,3 +27,35 @@ Empowering agriculture with smart irrigation, real-time analytics, and human-cen
 
 ## 🏗️ System Architecture
 
+---
+
+## 🧠 Tech Stack
+
+| Layer           | Tools/Tech                           |
+|----------------|---------------------------------------|
+| Microcontroller| ESP32 DevKit V1                       |
+| Sensors        | Capacitive Soil Moisture Sensor, DHT11|
+| Programming    | Arduino IDE (C++), PlatformIO         |
+| AI & Backend   | Python (Flask or Firebase Functions)  |
+| Frontend       | Flutter (for mobile/web app)          |
+| Database       | Firebase Realtime DB / Firestore      |
+| Visualization  | Dynamic Heatmaps (Flutter + Firebase) |
+| Hosting        | Firebase Hosting / Vercel             |
+
+---
+
+## ⚙️ Getting Started
+
+### 1. Hardware Setup
+- Use 4x ESP32 boards and soil moisture + DHT11 sensors
+- Flash using Arduino IDE (see `/iot-code` folder)
+- Upload data to Firebase Realtime Database
+
+### 2. Flutter App
+- Clone the repo and open in VSCode or Android Studio
+- Update Firebase config in `lib/firebase_options.dart`
+- Run:  
+```bash
+flutter pub get
+flutter run
+
