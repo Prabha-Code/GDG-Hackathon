@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AgriChatbot</title>
+    <style>
+        body {
+            font-family: "Arial", sans-serif;
+            background-color: #f4f9f4;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+        }
+        h2 {
+            color: #2d6a4f;
+            margin-top: 20px;
+        }
+        #chat-container {
+            width: 50%;
+            background: white;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+            margin: auto;
+            padding: 20px;
+            margin-top: 20px;
+        }
+        #chat-box {
+            height: 350px;
+            overflow-y: auto;
+            border: 1px solid #ccc;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 12px;
+            background-color: #e9f5e9;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .bot-message, .user-message {
+            padding: 10px;
+            border-radius: 10px;
+            max-width: 75%;
+            word-wrap: break-word;
+        }
+        .bot-message {
+            background: #2d6a4f;
+            color: white;
+            align-self: flex-start;
+        }
+        .user-message {
+            background: #52b788;
+            color: white;
+            align-self: flex-end;
+        }
+        #input-container {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        input, select, button {
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+        }
+        input {
+            flex: 1;
+        }
+        button {
+            background: #40916c;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #1b4332;
+        }
+        #voice-btn {
+            background-color: #ffbb33;
+        }
+        #voice-btn:hover {
+            background-color: #ff8c00;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>🌿 AgriChatbot - Your Farming Assistant</h2>
+
+    <div id="chat-container">
+        <label for="language">🌎 Select Language:</label>
+        <select id="language">
+            <option value="en">English</option>
+            <option value="ta">Tamil</option>
+            <option value="hi">Hindi</option>
+            <option value="te">Telugu</option>
+        </select>
+
+        <div id="chat-box"></div>
+
+        <div id="input-container">
+            <input type="text" id="user-input" placeholder="Type your message...">
+            <button onclick="sendMessage()">Send</button>
+            <button id="voice-btn" onclick="startVoiceRecognition()">🎤</button>
+            <button onclick="readResponse()">Read</button>
+        </div>
+    </div>
+
+    <script>
+        let voices = [];
+        let selectedVoice = null;
+
+        // Wait for voices to be loaded before using them
+        function loadVoices() {
+            voices = speechSynthesis.getVoices();
+            // Choose Tamil, Telugu, or Hindi voice if available
+            selectedVoice = voices.find(voice => voice.lang === "ta-IN");
+            if (!selectedVoice) selectedVoice = voices.find(voice => voice.lang === "te-IN");
+            if (!selectedVoice) selectedVoice = voices.find(voice => voice.lang === "hi-IN");
+            if (!selectedVoice) {
+                alert("Tamil, Telugu, or Hindi voice not available, defaulting to English.");
+                selectedVoice = voices.find(voice => voice.lang === "en-US"); // Fallback to English if none found
+            }
+        }
+
+        if (typeof speechSynthesis !== 'undefined') {
+            speechSynthesis.onvoiceschanged = loadVoices;
+        }
+
+        document.getElementById("user-input").addEventListener("keypress", function(event) {
+            if (event.key === "Enter") {
+                sendMessage();
+            }
+        });
+
+        function sendMessage() {
+            let userInput = document.getElementById("user-input").value;
+            let selectedLanguage = document.getElementById("language").value;
+
+            if (userInput.trim() === "") return;
+
+            let chatBox = document.getElementById("chat-box");
+
+            // Create user message element
+            let userMessage = document.createElement("div");
+            userMessage.classList.add("user-message");
+            userMessage.innerHTML = `<b>You:</b> ${userInput}`;
+            chatBox.appendChild(userMessage);
+
+            document.getElementById("user-input").value = "";
+
+            fetch("/chat", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ message: userInput, language: selectedLanguage })
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Create bot message element
+                let botMessage = document.createElement("div");
+                botMessage.classList.add("bot-message");
+                botMessage.innerHTML = `<b>Bot:</b> ${data.response}`;
+                chatBox.appendChild(botMessage);
+
+                chatBox.scrollTop = chatBox.scrollHeight; // Auto-scroll to latest message
+            })
+            .catch(error => console.error("Error:", error));
+        }
+
+        function startVoiceRecognition() {
+            const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+            recognition.lang = 'en-US';
+            recognition.continuous = false;
+
+            recognition.onstart = function() {
+                console.log("Voice recognition started. Please speak.");
+            };
+
+            recognition.onerror = function(event) {
+                console.log("Error occurred: " + event.error);
+            };
+
+            recognition.onresult = function(event) {
+                let userVoiceInput = event.results[0][0].transcript;
+                document.getElementById("user-input").value = userVoiceInput;
+                sendMessage();
+            };
+
+            recognition.start();
+        }
+
+        function readResponse() {
+            let chatBox = document.getElementById("chat-box");
+            let botMessages = chatBox.getElementsByClassName("bot-message");
+            let selectedLanguage = document.getElementById("language").value;
+
+            if (botMessages.length > 0) {
+                let lastBotMessage = botMessages[botMessages.length - 1].textContent.replace("Bot:", "").trim();
+                const speech = new SpeechSynthesisUtterance(lastBotMessage);
+
+                // Set the correct language for text-to-speech
+                if (selectedLanguage === "ta" && selectedVoice) {
+                    speech.voice = selectedVoice;  // Use Tamil voice
+                    speech.lang = "ta-IN";  // Tamil language
+                } else if (selectedLanguage === "te" && selectedVoice) {
+                    speech.voice = selectedVoice;  // Use Telugu voice
+                    speech.lang = "te-IN";  // Telugu language
+                } else if (selectedLanguage === "hi" && selectedVoice) {
+                    speech.voice = selectedVoice;  // Use Hindi voice
+                    speech.lang = "hi-IN";  // Hindi language
+                } else {
+                    speech.lang = "en-US";  // Default to English
+                }
+
+                speechSynthesis.speak(speech);
+            }
+        }
+    </script>
+
+</body>
+</html>
