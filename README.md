@@ -68,6 +68,7 @@ A conversational assistant provides support via voice/text, making smart insight
 | Visualization  | Dynamic Heatmaps (Flutter + Firebase) |
 | Hosting        | Firebase Hosting / Vercel             |
 
+
 ---
 
 ## ⚙️ Getting Started
