@@ -28,34 +28,32 @@ Empowering agriculture with smart irrigation, real-time analytics, and human-cen
 ## 🏗️ System Architecture
 
 ---
-                         +----------------------+
-                         |     Farmer/User      |
-                         +----------+-----------+
-                                    |
-                           [Flutter Mobile/Web Dashboard]
-                                    |
-         +--------------------------+------------------------------+
-         |                          |                              |
-  +------v------+          +--------v---------+           +--------v---------+
-  | Real-Time   |          |    AI Models     |           |  Multilingual    |
-  | IoT Data    |          |  (Python + ML)   |           |   Chatbot (NLP)  |
-  | Collection  |          |  - Yield Predict |           | - Language Model |
-  | (ESP32)     |          |  - Price Forecast|           | - Voice Support  |
-  +------+------+\         +--------+--------+           +--------+---------+
-         |       \                 |                             |
-         |        \                |                             |
-         |         \               |                             |
-+--------v----+ +---v-------------v--+                 +---------v---------+
-| Soil Moisture| |  Firebase Cloud DB |<-------------+ | Google IDX / Firebase |
-|  & DHT Sensor | |  + Firestore/RTDB |                | Authentication         |
-+--------------+ +-------------------+                +------------------------+
-         |                                             |
-   +-----v-----+                              +--------v--------+
-   | MATLAB     |<----------------------------|  Weather API     |
-   | Heatmap    |   Moisture Zones + Risk     | (Forecasting)    |
-   | Generator  |                            +-------------------+
-   +-----------+
+                    Data Collection
+IoT sensors (ESP32 with soil moisture and DHT11) capture live field data and transmit it to Firebase in real time.
 
+Data Storage & Sync
+Firebase Realtime Database or Firestore stores historical and real-time data. Firebase Authentication manages user roles.
+
+Dashboard Access
+Farmers and admins access the Flutter-powered dashboard to monitor field health, crop status, and system alerts.
+
+AI Intelligence Layer
+Python-based machine learning models hosted on Google IDX analyze incoming data to:
+
+Predict crop yield
+
+Identify potential diseases
+
+Forecast market prices
+
+Heatmap Generation
+MATLAB scripts process sensor data and produce dynamic moisture heatmaps that guide smart irrigation.
+
+Weather Integration
+Real-time weather data helps optimize watering schedules and alerts farmers of adverse climate conditions.
+
+Multilingual Chatbot
+A conversational assistant provides support via voice/text, making smart insights accessible even for non-literate users.
 
 ## 🧠 Tech Stack
 
