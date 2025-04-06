@@ -28,6 +28,34 @@ Empowering agriculture with smart irrigation, real-time analytics, and human-cen
 ## 🏗️ System Architecture
 
 ---
+                         +----------------------+
+                         |     Farmer/User      |
+                         +----------+-----------+
+                                    |
+                           [Flutter Mobile/Web Dashboard]
+                                    |
+         +--------------------------+------------------------------+
+         |                          |                              |
+  +------v------+          +--------v---------+           +--------v---------+
+  | Real-Time   |          |    AI Models     |           |  Multilingual    |
+  | IoT Data    |          |  (Python + ML)   |           |   Chatbot (NLP)  |
+  | Collection  |          |  - Yield Predict |           | - Language Model |
+  | (ESP32)     |          |  - Price Forecast|           | - Voice Support  |
+  +------+------+\         +--------+--------+           +--------+---------+
+         |       \                 |                             |
+         |        \                |                             |
+         |         \               |                             |
++--------v----+ +---v-------------v--+                 +---------v---------+
+| Soil Moisture| |  Firebase Cloud DB |<-------------+ | Google IDX / Firebase |
+|  & DHT Sensor | |  + Firestore/RTDB |                | Authentication         |
++--------------+ +-------------------+                +------------------------+
+         |                                             |
+   +-----v-----+                              +--------v--------+
+   | MATLAB     |<----------------------------|  Weather API     |
+   | Heatmap    |   Moisture Zones + Risk     | (Forecasting)    |
+   | Generator  |                            +-------------------+
+   +-----------+
+
 
 ## 🧠 Tech Stack
 
