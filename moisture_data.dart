@@ -23,7 +23,7 @@ class _MoisturePageState extends State<MoisturePage> {
     // Initialize WebView Controller
     _controller = WebViewController()
       ..setJavaScriptMode(JavaScriptMode.unrestricted)
-      ..loadRequest(Uri.parse('https://your-heatmap-dashboard-url.com')); // Replace with your actual URL
+      ..loadRequest(Uri.parse('https://heatmap-dashboard-url.com'));
 
     // Update sensor values every 3 seconds
     Timer.periodic(const Duration(seconds: 3), (timer) {
